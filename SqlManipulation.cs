@@ -17,6 +17,7 @@ using System.IO;
 namespace DatabaseInvoke
 {
     /// <summary>
+    /// Add or remove the supported type by adding or removing the related GetConnection or GetDbDataAdapter method.
     /// 可以根据支持的Sql类型增加或删除类型，需要增加或删除对应的GetConnection和GetDbDataAdapter方法。
     /// </summary>
     public enum SqlType
@@ -26,10 +27,12 @@ namespace DatabaseInvoke
         PostgresQL,
         Oracle,
         SQLite,
+        //(ODBC ONLY) host system must have the data driver installed. ODBC data source is necessary if DSN is used.
         //对ODBC方式需要格外注意，目标系统必须预先安装有对应的数据驱动，如果使用DSN，那么还需要使用配置ODBC数据源
         Odbc
     }
     /// <summary>
+    /// The class use ADO.NET access to database. It is thread safe if a single active object is used.
     /// 使用ADO.NET控制对数据库的基本访问方法，对同一个活动对象（不关闭）线程安全。
     /// </summary>
     public class SqlManipulation : IDisposable
@@ -48,6 +51,7 @@ namespace DatabaseInvoke
         private bool _disposed;
         #endregion
 
+        #region private functions
         private DbConnection GetConnection()
         {
             DbConnection conn;
@@ -111,10 +115,18 @@ namespace DatabaseInvoke
             return command;
         }
 
+        private DbDataReader GetDataReader(DbConnection conn, string strSQL)
+        {
+            DbCommand command = GetCommand(conn, strSQL);
+            return command.ExecuteReader();
+        }
+        #endregion
+
         /// <summary>
+        /// Init a connection and open it.
         /// 初始化连接并打开
         /// </summary>
-        /// <returns></returns>
+        /// <returns>true if successful</returns>
         public bool Init()
         {
             try
@@ -125,17 +137,21 @@ namespace DatabaseInvoke
             }
             catch (Exception e)
             {
-                //记录日志，退出
-                MessageBox.Show(e.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //log and exit
+                ErrorHelper.Error(e);
                 return false;
             }
         }
 
         /// <summary>
+        /// Execute the select query.
         /// 执行SELECT查询语句，并返回DataTable对象。
         /// </summary>
-        /// <param name="strSQL">需要执行的sql语句</param>
-        /// <returns>DataTable对象</returns>
+        /// <param name="strSQL">
+        /// Sql to be executed.
+        /// 需要执行的sql语句
+        /// </param>
+        /// <returns>DataTable object</returns>
         public DataTable ExcuteQuery(string strSQL)
         {
             DbDataAdapter adp = GetDbDataAdapter(strSQL);
@@ -146,8 +162,8 @@ namespace DatabaseInvoke
             }
             catch (Exception e)
             {
-                //记录日志，并返回空
-                MessageBox.Show(strSQL + "\n" + e.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //log error and return null
+                ErrorHelper.Error(e);
                 return null;
             }
             return dt;
@@ -171,7 +187,7 @@ namespace DatabaseInvoke
             catch (Exception e)
             {
                 //记录日志，并返回0
-                MessageBox.Show(strSQL + "\n" + e.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ErrorHelper.Error(e);
                 return 0;
             }
         }
@@ -201,7 +217,7 @@ namespace DatabaseInvoke
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ErrorHelper.Error(e);
                 transaction.Rollback();
                 return -1;
             }
@@ -231,9 +247,40 @@ namespace DatabaseInvoke
             {
                 return cmd.ExecuteNonQuery();
             }
-            catch (Exception e1)
+            catch (Exception e)
             {
-                MessageBox.Show("插入数据错误！" + e1.ToString(), "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ErrorHelper.Error(e);
+                return -1;
+            }
+        }
+
+        /// <summary>
+        /// 执行非查询SQL，使用SQL Server的Image对象
+        /// </summary>
+        /// <param name="sql">需要执行的sql语句，语句中有且仅有一个‘@blob’参数</param>
+        /// <param name="path">需要插入的blob文件路径</param>
+        /// <returns>受影响的行数，执行不成功则返回-1</returns>
+        public int SqlImageNonQuery(string sql, string path)
+        {
+            if (!(_conn is SqlConnection))
+            {
+                return -1;
+            }
+
+            //SqlCommand cmd = new SqlCommand("INSERT INTO TEST SET F2 =@blob", _conn as SqlConnection);
+            SqlCommand cmd = new SqlCommand(sql, _conn as SqlConnection);
+
+            cmd.Parameters.Add(new SqlParameter("@blob", SqlDbType.Image));
+            FileInfo fi = new FileInfo(path);
+            var mydata = File.ReadAllBytes(path);
+            cmd.Parameters["@blob"].Value = mydata;
+            try
+            {
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                ErrorHelper.Error(e);
                 return -1;
             }
         }
