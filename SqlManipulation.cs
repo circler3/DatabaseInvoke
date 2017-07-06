@@ -120,6 +120,37 @@ namespace DatabaseInvoke
             DbCommand command = GetCommand(conn, strSQL);
             return command.ExecuteReader();
         }
+
+        /// <summary>
+        /// 使用DataReader方式循环执行ReadSingleRow委托方法
+        /// Use DataReader object to execute the delegate method
+        /// </summary>
+        /// <param name="strSQL">需要执行的SQL语句</param>
+        /// <param name="ReadSingleRow">需要循环执行的方法</param>
+        public void ExecuteReader(string strSQL, Action<IDataRecord> ReadSingleRow)
+        {
+            using (DbDataReader myReader = GetDataReader(_conn, strSQL))
+            {
+                while (myReader.Read())
+                {
+                    ReadSingleRow(myReader);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 直接获取DataReader对象，用于后续操作，请注意需要在使用完毕使用reader.Close()方法或者直接使用using语法.
+        /// Get DataReader object directly for manipulation. Caution: use close() method to close reader after finishing the execution or simplely use using clause.
+        /// for example:
+        /// using (var reader = GetDataReader(strSQL))
+        /// { while(reader.Read()) { ... } }
+        /// </summary>
+        /// <param name="strSQL">需要执行的SQL语句</param>
+        /// <returns>DataReader对象</returns>
+        public DbDataReader GetDataReader(string strSQL)
+        {
+            return GetDataReader(_conn, strSQL);
+        }
         #endregion
 
         /// <summary>
