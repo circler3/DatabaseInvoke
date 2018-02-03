@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>circler3</Authors>
+    <Company />
+    <PackageId>DatabaseInvoke</PackageId>
+    <Version>1.0.0-pre</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="6.10.6" />
+    <PackageReference Include="Npgsql" Version="3.2.6" />
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="12.2.1100" />
+    <PackageReference Include="System.Data.Odbc" Version="4.5.0-preview1-25914-04" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.107" />
+  </ItemGroup>
+
+</Project>
