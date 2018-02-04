@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseInvoke", "DatabaseInvoke.csproj", "{C7C60F1C-13CF-49EC-A368-450F1ADC0762}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseInvoke_net40", "DatabaseInvoke_net40\DatabaseInvoke_net40.csproj", "{C7C60F1C-13CF-49EC-A368-450F1ADC0762}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseInvoke", "DatabaseInvoke\DatabaseInvoke.csproj", "{C7A773AD-1B4D-498D-9316-C0BC4F464D42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{C7C60F1C-13CF-49EC-A368-450F1ADC0762}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7C60F1C-13CF-49EC-A368-450F1ADC0762}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7C60F1C-13CF-49EC-A368-450F1ADC0762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7A773AD-1B4D-498D-9316-C0BC4F464D42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7A773AD-1B4D-498D-9316-C0BC4F464D42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7A773AD-1B4D-498D-9316-C0BC4F464D42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7A773AD-1B4D-498D-9316-C0BC4F464D42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7ADAD91D-4D5A-4437-B9D2-4D39C560F214}
 	EndGlobalSection
 EndGlobal

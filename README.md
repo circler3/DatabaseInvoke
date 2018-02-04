@@ -22,9 +22,12 @@ using (SqlManipulation sm = new SqlManipulation(Properties.Settings.Default.Conn
 
 ## Roadmap
 
-^_^ I have no idea. I am trying to keep the project simple to use. Issues and PRs are welcomed.
+* Port to .Net Standard
+* Publish a nuget version
 
 ## Update notes
+
+##### UPDATE 2018/02/05: Add pre-release version for .net standard 2.0. And legacy codes are renamed for .NET Framework 4.0 users.
 
 ##### UPDATE 2017/07/06: Add DataReader way to read from database. DataReader is considered to be more efficient on memory usage compared to DataAdapter. It is useful when you do not need to keep a copy of data in the memory.
 
