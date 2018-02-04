@@ -44,6 +44,15 @@ namespace DatabaseInvoke
             _strDSN = strDSN;
         }
 
+        public DbConnection Connection
+        {
+            get
+            {
+                if (_conn == null) return GetConnection();
+                else return _conn;
+            }
+        }
+
         #region private variables
         private SqlType _sqlType;
         private string _strDSN;
@@ -316,7 +325,7 @@ namespace DatabaseInvoke
             }
         }
 
-        #region 资源清理
+        #region resource cleanup 资源清理
         public void Dispose()
         {
             Dispose(true);
